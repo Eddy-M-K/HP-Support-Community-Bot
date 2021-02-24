@@ -157,9 +157,7 @@ def Identify_Commands():
 driver = webdriver.Edge(r"C:\Users\EddyM\Downloads\edgedriver_win64 (1)\msedgedriver.exe")
 #driver = webdriver.Firefox("C:\Users\EddyM\Downloads\geckodriver-v0.29.0-win64\geckodriver.exe")
 
-#Sign_In_Notifications("lolqwertylel@gmail.com", "minwoo0503H")
-#Sign_In_Notifications("Eddy.M.K", "iWwlY#0#W94RA4")
-#Sign_In_Notifications("HPDeviceHelper@outlook.com", "$0Wg5u29rS#9@E!")
+Sign_In_Notifications(username, password)
 model_name = "an015np"
 full_product_name, main_product_page_url = Main_Product_Page(model_name)
 print(Maintenance_and_Service_Guide())
