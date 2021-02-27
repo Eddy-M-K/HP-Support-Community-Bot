@@ -7,68 +7,8 @@ from selenium.webdriver.support import expected_conditions as EC
 import time 
 from selenium.common.exceptions import NoSuchElementException
 
-#Always call Main_Product_Page
-def Main_Product_Page(model_name):
-    driver.execute_script('''window.open("https://support.hp.com/us-en/products","_blank");''')
-
-    driver.switch_to.window(driver.window_handles[2])
-
-    driver.get('https://support.hp.com/us-en/products')
-
-    driver.implicitly_wait(10)
-    accept = driver.find_element_by_id('onetrust-accept-btn-handler')
-    accept.click()
-
-    search_box = driver.find_element_by_id('search-input-pfinder')
-    search_box.send_keys(model_name)
-
-    find_button = driver.find_element_by_id('btnSplitSearchSubmit')
-    find_button.click()
-
-    driver.implicitly_wait(10)
-    full_product_name = driver.find_element_by_xpath("//div[@id='pdpPrdctHeading']/h2").text
-
-    x_button = driver.find_element_by_id("dismiss-notifications")
-    x_button.click()
-
-    #<p><font size="6"><strong><font face="hpsimplifiedlight,arial,sans-serif">HP Spectre x360 - 13-ap0053dx</font></strong></font></p>
-    answer += '<p><font size="6"><strong><font face="hpsimplifiedlight,arial,sans-serif">%s</font></strong></font></p>' % full_product_name
-
-    return full_product_name, driver.current_url
-
-def Product_Specifications():
-    #driver.switch_to.window(driver.window_handles[2])
-
-    product_information = driver.find_element_by_id('tab-product-info')
-    product_information.click()
-
-    driver.implicitly_wait(10)
-    dropdown = driver.find_element_by_id("dd-727118134876361637267272859691104_dd_headerLink")
-    driver.execute_script("arguments[0].scrollIntoView();", dropdown)
-    driver.execute_script("arguments[0].click();", dropdown)
-
-    dropdown_product_specifications = driver.find_element_by_xpath("//ul[@id='dd-727118134876361637267272859691104_dd_list']/li[2]/a")
-    dropdown_product_specifications.click()
-
-    driver.implicitly_wait(10)
-    product_specifications_text = driver.find_element_by_xpath("//div[@id='dd-items_727118134876361637267272859691104']/div/ul/li/a/*[contains(text(), '%s')]" % model_name)
-    driver.execute_script("arguments[0].scrollIntoView();", product_specifications_text)
-    driver.execute_script("arguments[0].click();", product_specifications_text)
-    #product_specs_page = product_specifications_text.find_element_by_xpath('..')
-    #product_specs_page.click()
-
-    driver.switch_to.window(driver.window_handles[1])
-
-    product_specs_url = driver.current_url
-
-    driver.close()
-
-    driver.switch_to.window(driver.window_handles[0])
-
-    return product_specs_url
-
 def Maintenance_and_Service_Guide():
-    #driver.switch_to.window(driver.window_handles[2])
+    #driver.switch_to.window(driver.swindow_handles[2])
 
     manuals = driver.find_element_by_id('manuals')
     manuals.click()

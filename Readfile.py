@@ -1,6 +1,6 @@
-t = open("signin.txt", "r")
-username = t.readline()
-password = t.readline()
+def Get_Sign_In():
+    t = open("signin.txt", "r")
+    username = t.readline()
+    password = t.readline()
 
-print(username)
-print(password)
+    return username, password
