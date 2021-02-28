@@ -6,6 +6,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time 
 from selenium.common.exceptions import NoSuchElementException
+from Main import *
 
 def Main_Product_Page(driver, identifier, final_answer):
     driver.execute_script('''window.open("https://support.hp.com/us-en/products","_blank");''')
@@ -17,7 +18,7 @@ def Main_Product_Page(driver, identifier, final_answer):
     accept.click()
     '''
     search_box = driver.find_element_by_id('search-input-pfinder')
-    search_box.send_keys(model_name)
+    search_box.send_keys(identifier)
 
     find_button = driver.find_element_by_id('btnSplitSearchSubmit')
     find_button.click()

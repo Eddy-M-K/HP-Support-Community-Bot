@@ -6,7 +6,11 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time 
 
-def Sign_In_Notifications(driver, id_username, id_password):
+def Sign_In_Notifications(driver):
+    t = open("signin.txt", "r")
+    id_username = t.readline()
+    id_password = t.readline()
+
     driver.implicitly_wait(5)
     username = driver.find_element_by_id("username")
     username.send_keys(id_username)

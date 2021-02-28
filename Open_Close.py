@@ -6,14 +6,10 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time 
 from selenium.common.exceptions import NoSuchElementException
-import mysql.connector
 
-support_options = mysql.connector.connect(
-    host = "localhost",
-    user = "",
-    password = ""
-)
+def Open_New_Tab(driver, url):
+    driver.execute_script('''window.open("%s","_blank");''' % url)
 
-support_options_cursor = support_options.cursor()
-
-support_options_cursor.execute("CREATE DATABASE ")
+def Close_Current_Tab(driver):
+    driver.close()
+    driver.switch_to.window(driver.window_handles[2])

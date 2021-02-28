@@ -50,7 +50,7 @@ def Command_Type(identifier):
     return switcher.get(identifier.lower(), 5)
 
 command = "Product: ap0053dx, Specifications: Microprocessor Memory Hard Display, Maintenance: 45, Drivers: sp96858.exe sp112143.exe, Support"
-'''
+
 individual_commands = command.split(",")
 
 for individual_command in individual_commands:
@@ -71,5 +71,4 @@ for individual_command in individual_commands:
         #SQL stuff
         pass
     else:
-        answer += "<p>The function '<i>%s</i>' was not recognized.</p>" % (split_individual_command[0])
-'''
+        final_answer += "<p>The function '<i>%s</i>' was not recognized.</p>" % (split_individual_command[0])
