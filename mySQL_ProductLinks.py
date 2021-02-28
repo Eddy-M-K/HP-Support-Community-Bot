@@ -8,20 +8,6 @@ from selenium.common.exceptions import NoSuchElementException
 import mysql.connector
 
 def Check_If_Exist(mycursor, full_product_name):
-    #mycursor.execute("CREATE DATABASE HP")
-    #mycursor.execute("CREATE TABLE ProductLinks (full_product_name VARCHAR(100) PRIMARY KEY, software_link VARCHAR(255), specifications_link VARCHAR(255), maintenance_link VARCHAR(255))")
-    '''
-    mycursor.execute("DESCRIBE ProductLinks")
-
-    for x in mycursor:
-        print(x)
-    '''
-    '''
-    sql = "INSERT INTO ProductLinks (full_product_name, software_link, specifications_link, maintenance_link) VALUES (%s, %s, %s, %s)"
-    val = (full_product_name, None, None, None)
-    mycursor.execute(sql, val)
-    db.commit()
-    '''
     mycursor.execute("SELECT * FROM ProductLinks WHERE full_product_name = %s GROUP BY full_product_name", (full_product_name,))
     
     results = mycursor.fetchall()
@@ -38,12 +24,20 @@ def SQL_Get_Links(mycursor, full_product_name):
    
     return result[0], result[1], result[2]
 
+def SQL_Store_Links(mycursor, db, full_product_name, software_link, specifications_link, maintenance_link):
     '''
-    for value in result:
-        print("%s" % value[0])
-        print("%s" % value[1])
-        print("%s" % value[2])
-    '''
+    mycursor.execute("CREATE DATABASE HP")
+    mycursor.execute("CREATE TABLE ProductLinks (full_product_name VARCHAR(100) PRIMARY KEY, software_link VARCHAR(255), specifications_link VARCHAR(255), maintenance_link VARCHAR(255))")
 
-def SQL_Link_Open(driver, url):
-    driver.get('%s' % url)
+    mycursor.execute("DESCRIBE ProductLinks")
+    
+    mycursor.execute("SELECT * FROM ProductLinks")
+
+    for x in mycursor:
+        print(x)
+    '''
+    
+    sql = "INSERT INTO ProductLinks (full_product_name, software_link, specifications_link, maintenance_link) VALUES (%s, %s, %s, %s)"
+    val = (full_product_name, software_link, specifications_link, maintenance_link)
+    mycursor.execute(sql, val)
+    db.commit()

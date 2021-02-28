@@ -6,8 +6,11 @@ from selenium.webdriver.support.ui import WebDriverWait
 import time 
 from selenium.common.exceptions import NoSuchElementException
 
-def Open_New_Tab(driver, url):
-    driver.execute_script('''window.open("%s","_blank");''' % url)
+#def Open_New_Tab(driver, url):
+#    driver.execute_script('''window.open("%s","_blank");''' % url)
+
+def Open_URL(driver, url):
+    driver.get('%s' % url)
 
 def Close_Current_Tab(driver):
     driver.close()

@@ -4,6 +4,7 @@ from msedge.selenium_tools import Edge, EdgeOptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 import time 
+from selenium.common.exceptions import NoSuchElementException
 
 def Sign_In_Notifications(driver):
     t = open("signin.txt", "r")
@@ -25,9 +26,11 @@ def Sign_In_Notifications(driver):
     submit_button.click()
 
     driver.implicitly_wait(10)
-    time.sleep(1)
-    accept = driver.find_element_by_id('onetrust-accept-btn-handler')
-    accept.click()
+    try:
+        accept = driver.find_element_by_id('onetrust-accept-btn-handler')
+        accept.click()
+    except NoSuchElementException:
+        pass
 
     close = driver.find_element_by_class_name("close")
     close.click()

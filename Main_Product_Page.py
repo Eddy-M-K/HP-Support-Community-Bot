@@ -24,8 +24,11 @@ def Main_Product_Page(driver, identifier, final_answer):
     driver.implicitly_wait(10)
     full_product_name = driver.find_element_by_xpath("//div[@id='pdpPrdctHeading']/h2").text
 
-    x_button = driver.find_element_by_id("dismiss-notifications")
-    x_button.click()
+    try:
+        x_button = driver.find_element_by_id("dismiss-notifications")
+        x_button.click()
+    except NoSuchElementException:
+        pass
 
     #<p><font size="6"><strong><font face="hpsimplifiedlight,arial,sans-serif">HP Spectre x360 - 13-ap0053dx</font></strong></font></p>
     final_answer += '<p><font size="6"><strong><font face="hpsimplifiedlight,arial,sans-serif">%s</font></strong></font></p>' % full_product_name

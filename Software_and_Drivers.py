@@ -10,19 +10,14 @@ def Software_and_Drivers_Link(driver):
     try:
         software_button = driver.find_element_by_id("drivers")
         driver.execute_script("arguments[0].scrollIntoView();", software_button)
-        software_button.send_keys(Keys.CONTROL + Keys.ENTER)
-        driver.switch_to.window(driver.window_handles[3])
+        software_button.click()
 
         return driver.current_url
-    except:
+    except NoSuchElementException:
         return None
 
 def Software_and_Drivers_Answer(driver, device, softpaq_names, url, full_product_name):
     device.final_answer += '<hr /><p><font size="5"><strong>Software and Drivers</strong></font></p>'
-
-    if url == None:
-        device.final_answer += '<p>The Software and Drivers page for the %s was not found.<p>' % full_product_name
-        return
 
     driver.implicitly_wait(10)
     open_all = driver.find_element_by_id("open-close-toggle-tag")

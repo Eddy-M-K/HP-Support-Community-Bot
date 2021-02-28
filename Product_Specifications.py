@@ -6,21 +6,24 @@ from selenium.webdriver.support.ui import WebDriverWait
 import time 
 from selenium.common.exceptions import NoSuchElementException
 
-def Product_Specifications_Link(driver):
+def Product_Specifications_Link(driver, identifier):
     product_information = driver.find_element_by_id('tab-product-info')
     product_information.click()
+    time.sleep(2)
 
     driver.implicitly_wait(10)
     dropdown = driver.find_element_by_id("dd-727118134876361637267272859691104_dd_headerLink")
     driver.execute_script("arguments[0].scrollIntoView();", dropdown)
     driver.execute_script("arguments[0].click();", dropdown)
 
+    driver.implicitly_wait(10)
     dropdown_product_specifications = driver.find_element_by_xpath("//ul[@id='dd-727118134876361637267272859691104_dd_list']/li[2]/a")
     dropdown_product_specifications.click()
 
+    time.sleep(2)
     driver.implicitly_wait(10)
     try:
-        product_specifications_text = driver.find_element_by_xpath("//div[@id='dd-items_727118134876361637267272859691104']/div/ul/li/a/*[contains(text(), '%s')]" % model_name)
+        product_specifications_text = driver.find_element_by_xpath("//div[@id='dd-items_727118134876361637267272859691104']/div/ul/li/a/*[contains(text(), '%s')]" % identifier)
         driver.execute_script("arguments[0].scrollIntoView();", product_specifications_text)
         driver.execute_script("arguments[0].click();", product_specifications_text)
         driver.switch_to.window(driver.window_handles[3])
@@ -32,10 +35,7 @@ def Product_Specifications_Link(driver):
 
 def Product_Specifications_Answer(driver, device, keywords, url, full_product_name):
     device.final_answer += '<hr /><p><font size="5"><strong>Product Specifications</strong></font></p>'
-    if url == None:
-        device.final_answer += '<p>Product Specifications for the %s were not found.<p>' % full_product_name
-        return
-
+    
     device.final_answer += "<table><tbody>"
     content = driver.find_elements_by_class_name('content')
     table = content[0].find_element_by_xpath(".//div/div/table/tbody")
