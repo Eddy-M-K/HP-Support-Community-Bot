@@ -6,6 +6,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time 
 from selenium.common.exceptions import NoSuchElementException
+from Open_Close import *
 
 def Software_and_Drivers_Link(driver):
     software_button = driver.find_element_by_id("drivers")
@@ -19,7 +20,9 @@ def Software_and_Drivers_Link(driver):
 
     return link
 
-def Software_and_Drivers_Answer(driver, final_answer, softpaq_names):
+def Software_and_Drivers_Answer(driver, device, softpaq_names, url, full_product_name):
+    device.final_answer += '<hr /><p><font size="5"><strong>Software and Drivers</strong></font></p>'
+
     driver.implicitly_wait(10)
     open_all = driver.find_element_by_id("open-close-toggle-tag")
     open_all.click()
@@ -48,7 +51,7 @@ def Software_and_Drivers_Answer(driver, final_answer, softpaq_names):
         else: 
             fix_is_found = False
 
-        final_answer += """
+        device.final_answer += """
         <p><strong>%s</strong></p>
         <p><strong><a href="%s" target="_self">Download</a></strong></p>
         <table border="1">
@@ -80,10 +83,10 @@ def Software_and_Drivers_Answer(driver, final_answer, softpaq_names):
         """ % (driver_name, softpaq_link, left_section_content[0], left_section_content[1], left_section_content[2], left_section_content[3], left_section_content[4], description)
 
         if fix_is_found:
-            final_answer += "<tr><td><strong>Fixes and Enhancements:</strong></td><td><span>%s</span></td></tr>" % (fix)
+            device.final_answer += "<tr><td><strong>Fixes and Enhancements:</strong></td><td><span>%s</span></td></tr>" % (fix)
 
-        final_answer += '</tbody></table><p class="lia-align-right">&nbsp;</p>'
+        device.final_answer += '</tbody></table><p class="lia-align-right">&nbsp;</p>'
 
-    final_answer += """
+    device.final_answer += """
     <p class="lia-align-center"><span>By downloading, you agree to HP's terms and conditions.&nbsp;</span><a href="https://support.hp.com/us-en/document/c00581401" target="_blank" rel="noopener">HP Software License Agreement.</a></p>
     """

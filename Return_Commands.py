@@ -5,6 +5,6 @@ def Return_Commands(driver):
     driver.execute_script("arguments[0].scrollIntoView();", mention)
     text = mention.find_element_by_xpath(".//..").text
 
-    full_command = text.removeprefix('@SpectreFolio')
+    full_command = text.removeprefix('@SpectreFolio') # Later change to the bot's name
 
     return full_command
