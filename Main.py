@@ -7,12 +7,13 @@ from selenium.webdriver.support import expected_conditions as EC
 import time 
 from selenium.common.exceptions import NoSuchElementException
 from Sign_In_Notifications import *
-from mySQL import *
+from mySQL_ProductLinks import *
 from Identify_Post_and_Country import *
 from Return_Commands import *
 from Command_Type import *
-from Software_and_Drivers import *
 from Product_Specifications import *
+from Maintenance_and_Service_Guide import *
+from Software_and_Drivers import *
 from Main_Product_Page import *
 from Open_Close import *
 
@@ -32,7 +33,7 @@ class Product:
         self.specifications_link = Product_Specifications_Link(driver)
 
     def set_maintenance_link(self, driver):
-        self.maintenance_link = Maintenance_and_Service_Guide(driver)
+        self.maintenance_link = Maintenance_and_Service_Guide_Link(driver)
 
     def get_software_link(self):
         return self.software_link
@@ -45,13 +46,6 @@ class Product:
 
     def get_full_product_name(self):
         return self.full_product_name
-
-    def sql_open_software(driver):
-
-    def sql_open_specifications(driver):
-
-    def sql_open_maintenance(driver):
-
 
 # SQL Sign In and cursor object creation
 s = open("mysql_signin.txt", "r")
@@ -120,9 +114,41 @@ for mention in unread_mention_list:
             # Checks if the full product name exists in the MySQL database
             if Check_If_Exist(mycursor, full_product_name):
                 # Retrieves all links from the SQL database
-                software_link, specifications_link, maintenance_link = SQL_Get_Links(mycursor)
+                software_link, specifications_link, maintenance_link = SQL_Get_Links(mycursor, full_product_name)
                 #
                 Device[identifier] = Product(driver, full_product_name, final_answer, software_link, specifications_link, maintenance_link)
+
+                # SQL COMMAND SWITCHER
+                for individual_command in individual_commands:
+                    split_individual_command = individual_command.split(" ")
+                    command_number = Command_Type(split_individual_command[0])
+                    # Specifications
+                    if command_number == 2:
+                        SQL_Link_Open(driver, Device[identifier].get_specifications_link)
+                        if len(individual_command) == 1:
+                            specs_arguments = "all"
+                        else:
+                            specs_arguments = individual_command[1:]
+                    # Maintenance
+                    elif command_number == 3:
+                        SQL_Link_Open(driver, Device[identifier].get_maintenance_link)
+                        if command_number == 3:
+                            if len(individual_command) == 1:
+                                maintenance_argument = "No Page"
+                            else:
+                                maintenance_argument = individual_command[1]
+                    # Software
+                    elif command_number == 4:
+                        SQL_Link_Open(driver, Device[identifier].get_software_link)
+                        software_request_is_found = True
+                        software_arguments = individual_command[1:]
+                    elif command_number == 5:
+                        # Support
+                        pass
+                    else:
+                        Device[identifier].final_answer += "<p>The command '<i>%s</i>' was not recognized.</p>" % (split_individual_command[0])
+
+                Close_Current_Tab(driver)
             else:
                 # Creates new product instance and assigns it to the dictionary device, which is accessible through the identifier
                 Device[identifier] = Product(driver, full_product_name, final_answer, None, None, None)
@@ -131,6 +157,7 @@ for mention in unread_mention_list:
                 maintenance_request_is_found = False
                 software_request_is_found = False
 
+                # SELENIUM COMMAND SWITCHER
                 for individual_command in individual_commands:
                     split_individual_command = individual_command.split(" ")
                     command_number = Command_Type(split_individual_command[0])
@@ -157,30 +184,27 @@ for mention in unread_mention_list:
                         # Support
                         pass
                     else:
-                        device.final_answer += "<p>The command '<i>%s</i>' was not recognized.</p>" % (split_individual_command[0])
+                        Device[identifier].final_answer += "<p>The command '<i>%s</i>' was not recognized.</p>" % (split_individual_command[0])
 
                 # Opens the Specifications page, saves it, and leaves the tab open
                 Device[identifier].set_specifications_link(driver)
                 if specifications_request_is_found:
-                    Product_Specifications_Answer(driver, device, specs_arguments, Device[identifier].get_specifications_link(), Device[identifier].get_full_product_name)
-                else:
-                    Close_Current_Tab(driver)
+                    Product_Specifications_Answer(driver, Device[identifier], specs_arguments, Device[identifier].get_specifications_link(), Device[identifier].get_full_product_name)
+                Close_Current_Tab(driver)
 
                 # Opens the Maintenance and Service Guide page, saves it, and leaves the tab open
                 Device[identifier].set_maintenance_link(driver)
                 if maintenance_request_is_found:
-                    Maintenance_and_Service_Guide_Answer(driver, device, maintenance_argument, Device[identifier].get_maintenance_link(), Device[identifier].get_full_product_name)
-                else:
-                    Close_Current_Tab(driver)
+                    Maintenance_and_Service_Guide_Answer(driver, Device[identifier], maintenance_argument, Device[identifier].get_maintenance_link(), Device[identifier].get_full_product_name)
+                Close_Current_Tab(driver)
 
                 # Opens the Software and Drivers page, saves it, and leaves the tab open
                 Device[identifier].set_software_link(driver)
                 if maintenance_request_is_found:
-                    Software_and_Drivers_Answer(driver, device, software_arguments, Device[identifier].get_software_link(), Device[identifier].get_full_product_name)
-                else:
-                    Close_Current_Tab(driver)
+                    Software_and_Drivers_Answer(driver, Device[identifier], software_arguments, Device[identifier].get_software_link(), Device[identifier].get_full_product_name)
+                Close_Current_Tab(driver)
 
-                
+
 
             '''
             if full_product_name exists in database:

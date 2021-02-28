@@ -3,7 +3,6 @@ from selenium.webdriver.common.keys import Keys
 from msedge.selenium_tools import Edge, EdgeOptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 import time 
 from selenium.common.exceptions import NoSuchElementException
 import mysql.connector
@@ -33,8 +32,8 @@ def Check_If_Exist(mycursor, full_product_name):
     else:
         return False
 
-def SQL_Get_Links(mycursor):
-    mycursor.execute("SELECT software_link, specifications_link, maintenance_link From ProductLinks WHERE full_product_name = %s", ("HP Spectre x360 - 13-ap0053dx",))
+def SQL_Get_Links(mycursor, full_product_name):
+    mycursor.execute("SELECT software_link, specifications_link, maintenance_link From ProductLinks WHERE full_product_name = %s", (full_product_name,))
     result = (mycursor.fetchall()[0])
    
     return result[0], result[1], result[2]
@@ -45,3 +44,6 @@ def SQL_Get_Links(mycursor):
         print("%s" % value[1])
         print("%s" % value[2])
     '''
+
+def SQL_Link_Open(driver, url):
+    driver.get('%s' % url)

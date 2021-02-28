@@ -3,14 +3,10 @@ from selenium.webdriver.common.keys import Keys
 from msedge.selenium_tools import Edge, EdgeOptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 import time 
 from selenium.common.exceptions import NoSuchElementException
-from Open_Close import *
 
 def Product_Specifications_Link(driver):
-    #driver.switch_to.window(driver.window_handles[2])
-
     product_information = driver.find_element_by_id('tab-product-info')
     product_information.click()
 
@@ -29,11 +25,7 @@ def Product_Specifications_Link(driver):
         driver.execute_script("arguments[0].click();", product_specifications_text)
         driver.switch_to.window(driver.window_handles[3])
 
-        url = driver.current_url
-
-        Close_Current_Tab(driver)
-
-        return url
+        return driver.current_url
     except NoSuchElementException:
         return None
 
@@ -49,8 +41,10 @@ def Product_Specifications_Answer(driver, device, keywords, url, full_product_na
     table = content[0].find_element_by_xpath(".//div/div/table/tbody")
 
     if keywords == "all":
-        # Retrieve full table
-        pass
+        full_table = driver.find_element_by_class_name("table table-bordered table-steps")
+        tableHTML = full_table.get_attribute('outerHTML')
+        device.final_answer += tableHTML
+        return 
     else:
         for keyword in keywords: 
             keyword_row = table.find_element_by_xpath(".//*[contains(text(), '%s')]" % keyword)
@@ -60,3 +54,5 @@ def Product_Specifications_Answer(driver, device, keywords, url, full_product_na
 
         device.final_answer += "</table></tbody>"
         device.final_answer += '<p class="lia-align-center"><span><a href="%s" target="_blank" rel="noopener">Specifications Source</a></span></p>' % url
+
+        return

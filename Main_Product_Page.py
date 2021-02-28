@@ -3,10 +3,8 @@ from selenium.webdriver.common.keys import Keys
 from msedge.selenium_tools import Edge, EdgeOptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 import time 
 from selenium.common.exceptions import NoSuchElementException
-from Main import *
 
 def Main_Product_Page(driver, identifier, final_answer):
     driver.execute_script('''window.open("https://support.hp.com/us-en/products","_blank");''')
