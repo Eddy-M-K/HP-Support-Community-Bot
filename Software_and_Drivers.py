@@ -9,9 +9,7 @@ from selenium.common.exceptions import NoSuchElementException
 def Software_and_Drivers_Link(driver):
     try:
         software_button = driver.find_element_by_id("drivers")
-        driver.execute_script("arguments[0].scrollIntoView();", software_button)
         software_button.click()
-
         return driver.current_url
     except NoSuchElementException:
         return None

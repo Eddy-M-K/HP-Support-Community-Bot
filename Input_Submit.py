@@ -11,6 +11,9 @@ def Input_Submit(driver, device):
     driver.execute_script("arguments[0].click();", HTML_button)
 
     driver.implicitly_wait(5)
+    ellipsis = driver.find_element_by_id("mceu_16-button")
+    ellipsis.click()
+
     input_box = driver.find_element_by_id("mceu_254")
     input_box.send_keys(device.final_answer)
 

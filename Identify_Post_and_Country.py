@@ -10,20 +10,29 @@ from selenium.common.exceptions import NoSuchElementException
 def Identify_Post_and_Country(driver):
     original_post = driver.find_element_by_class_name("first-message")
     driver.execute_script("arguments[0].scrollIntoView();", original_post)
+    print("Original Post Identified")
 
     try:
-        country = original_post.find_element_by_class_name("user-location-wrap").text
+        country_element = original_post.find_element_by_class_name("user-location-wrap")
+        country = country_element.text
     except NoSuchElementException:
         country = "Worldwide"
+    
+    print("Country found")
 
     post_url = driver.current_url
     split_url = post_url.split("/")
+
+
+    print("Split URL")
 
     for url in split_url:
         if '#' in url:
             string_hash = url.split("#")
             post_number = string_hash[0]
-            break 
+            break
+        
+    print("Post Number found")
 
     post = driver.find_element_by_xpath("//div[@data-lia-message-uid='%s']" % post_number)
     driver.execute_script("arguments[0].scrollIntoView();", post)

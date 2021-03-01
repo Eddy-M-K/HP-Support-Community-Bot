@@ -5,6 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 import time 
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.support import expected_conditions as EC
 
 def Sign_In_Notifications(driver):
     t = open("signin.txt", "r")
@@ -26,6 +27,7 @@ def Sign_In_Notifications(driver):
     submit_button.click()
 
     driver.implicitly_wait(10)
+    time.sleep(3)
     try:
         accept = driver.find_element_by_id('onetrust-accept-btn-handler')
         accept.click()
@@ -34,3 +36,13 @@ def Sign_In_Notifications(driver):
 
     close = driver.find_element_by_class_name("close")
     close.click()
+
+    WebDriverWait(driver, 90).until(EC.frame_to_be_available_and_switch_to_it((By.XPATH,"//iframe[@id='kampyleInvite']")))
+
+    driver.implicitly_wait(90)
+    not_right_now_button = driver.find_element_by_id("kplDeclineButton")
+    not_right_now_button.click()
+
+    driver.switch_to_default_content()
+
+    return
