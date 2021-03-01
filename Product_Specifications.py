@@ -7,6 +7,7 @@ import time
 from selenium.common.exceptions import NoSuchElementException
 
 def Product_Specifications_Link(driver, identifier):
+    time.sleep(2)
     product_information = driver.find_element_by_id('tab-product-info')
     product_information.click()
     time.sleep(2)
@@ -53,6 +54,6 @@ def Product_Specifications_Answer(driver, device, keywords, url, full_product_na
             device.final_answer += rowHTML
 
         device.final_answer += "</table></tbody>"
-        device.final_answer += '<p class="lia-align-center"><span><a href="%s" target="_blank" rel="noopener">Specifications Source</a></span></p>' % url
+        device.final_answer += '<p>&nbsp;</p><p class="lia-align-center"><span><a href="%s" target="_blank" rel="noopener">Specifications Source</a></span></p>' % url
 
         return

@@ -30,7 +30,9 @@ def Maintenance_and_Service_Guide_Answer(driver, device, page, url, full_product
                                     and that modifications are not covered under HP's standard warranty. For additional protection 
                                     in the case of accidental damage, refer to HP's ADP plans for your product.</p><p>&nbsp;</p>
                                     <p class="lia-align-center">Full details on <a href="https://www8.hp.com/us/en/privacy/limited_warranty.html" 
-                                    target="_blank" rel="noopener">HP's Worldwide Limited Warranty and Technical Support</a>.</p>'''
+                                    target="_blank" rel="noopener">HP's Worldwide Limited Warranty and Technical Support</a>.</p>
+                                    <p class="lia-align-center">Full details on <a href="https://support.hp.com/ca-en/document/c05805564" 
+                                    target="_blank" rel="noopener">Damage Not Covered by the HP Standard Limited Warranty</a>.</p>'''
 
         return
     else:

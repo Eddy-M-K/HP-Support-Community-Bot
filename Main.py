@@ -65,6 +65,7 @@ mycursor = db.cursor()
 # Web driver 
 driver = webdriver.Edge(r"C:\Users\EddyM\Downloads\edgedriver_win64 (1)\msedgedriver.exe")
 driver.get('https://h30434.www3.hp.com/t5/notificationfeed/page')
+driver.maximize_window()
 
 # Declares the Product dictionary, which will act as a list of Product instances
 Device = {}
@@ -79,10 +80,10 @@ notification_list = driver.find_element_by_id("notificationList")
 ul = notification_list.find_element_by_xpath(".//ul")
 
 while True:
-    unread_mention_list = ul.find_elements_by_xpath(".//li[@class='lia-notification-feed-item lia-notification-mentions lia-component-notificationfeed-widget-notification-feed-item']") #lia-notification-feed-item lia-notification-mentions lia-notification-unread lia-component-notificationfeed-widget-notification-feed-item
+    unread_mention_list = ul.find_elements_by_xpath(".//li[@class='lia-notification-feed-item lia-notification-mentions lia-notification-unread lia-component-notificationfeed-widget-notification-feed-item']") #lia-notification-feed-item lia-notification-mentions lia-component-notificationfeed-widget-notification-feed-item
 
     if (len(unread_mention_list) == 0):
-        driver.refresh()
+        pass
     else:
         # Loops through unread mentions
         for mention in unread_mention_list:
@@ -92,6 +93,7 @@ while True:
 
             # Checks if the user is EddyK
             if user_text == 'EddyK': 
+                # Initializes the final answer
                 final_answer = ""
 
                 # Opens forum thread with unread mention in new tab
@@ -126,6 +128,9 @@ while True:
                     if Check_If_Exist(mycursor, full_product_name):
                         # Retrieves all links from the SQL database
                         software_link, specifications_link, maintenance_link = SQL_Get_Links(mycursor, full_product_name)
+                        print(software_link)
+                        print(specifications_link)
+                        print(maintenance_link)
                         #
                         Device[identifier] = Product(driver, full_product_name, final_answer, software_link, specifications_link, maintenance_link)
 
@@ -133,8 +138,11 @@ while True:
                         for individual_command in individual_commands:
                             split_individual_command = individual_command.split(" ")
                             command_number = Command_Type(split_individual_command[1])
+                            # Pass the 'product' command
+                            if command_number == 1:
+                                pass
                             # Specifications
-                            if command_number == 2:
+                            elif command_number == 2:
                                 Device[identifier].set_specifications_link(driver, identifier)
                                 if Device[identifier].get_specifications_link == None:
                                     Device[identifier].final_answer += '<p>Product Specifications for the %s were not found.<p>' % Device[identifier].get_full_product_name()
@@ -183,8 +191,11 @@ while True:
                         for individual_command in individual_commands:
                             split_individual_command = individual_command.split(" ")
                             command_number = Command_Type(split_individual_command[1])
+                            # Pass the 'product' command
+                            if command_number == 1:
+                                pass
                             # Specifications
-                            if command_number == 2:
+                            elif command_number == 2:
                                 specifications_request_is_found = True
                                 if len(split_individual_command) == 2:
                                     specs_arguments = "all"
@@ -211,27 +222,29 @@ while True:
                         # Opens the Specifications page, saves it, and leaves the tab open
                         Device[identifier].set_specifications_link(driver, identifier)
                         if specifications_request_is_found:
-                            Product_Specifications_Answer(driver, Device[identifier], specs_arguments, Device[identifier].get_specifications_link(), Device[identifier].get_full_product_name)
+                            Product_Specifications_Answer(driver, Device[identifier], specs_arguments, Device[identifier].get_specifications_link(), Device[identifier].get_full_product_name())
                         # Closes New Tab
                         Close_Current_Tab(driver)
 
                         # Opens the Maintenance and Service Guide page, saves it, and leaves the tab open
                         Device[identifier].set_maintenance_link(driver)
                         if maintenance_request_is_found:
-                            Maintenance_and_Service_Guide_Answer(driver, Device[identifier], maintenance_argument, Device[identifier].get_maintenance_link(), Device[identifier].get_full_product_name)
+                            Maintenance_and_Service_Guide_Answer(driver, Device[identifier], maintenance_argument, Device[identifier].get_maintenance_link(), Device[identifier].get_full_product_name())
                         # Closes New Tab
                         Close_Current_Tab(driver)
 
                         # Opens the Software and Drivers page in the same tab, saves it, and reverts it back to the default main product page
                         Device[identifier].set_software_link(driver)
                         if software_request_is_found:
-                            Software_and_Drivers_Answer(driver, Device[identifier], software_arguments, Device[identifier].get_software_link(), Device[identifier].get_full_product_name)
+                            Software_and_Drivers_Answer(driver, Device[identifier], software_arguments, Device[identifier].get_software_link(), Device[identifier].get_full_product_name())
                         
                         driver.get("https://support.hp.com/us-en/products")
 
-                        SQL_Store_Links(mycursor, db, Device[identifier].get_full_product_name(), Device[identifier].get_software_link(), Device[identifier].get_specifications_link(), Device[identifier].get_maintenance_link())
-
+                        #SQL_Store_Links(mycursor, db, Device[identifier].get_full_product_name(), Device[identifier].get_software_link(), Device[identifier].get_specifications_link(), Device[identifier].get_maintenance_link())
+                driver.close()
                 driver.switch_to.window(driver.window_handles[1])
                 Input_Submit(driver, Device[identifier])
                 #driver.close()
                 #driver.switch_to.window(driver.window_handles[0])
+
+    #driver.refresh()

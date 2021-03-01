@@ -36,12 +36,23 @@ def Sign_In_Notifications(driver):
 
     close = driver.find_element_by_class_name("close")
     close.click()
-
+    '''
     WebDriverWait(driver, 90).until(EC.frame_to_be_available_and_switch_to_it((By.XPATH,"//iframe[@id='kampyleInvite']")))
 
     driver.implicitly_wait(90)
     not_right_now_button = driver.find_element_by_id("kplDeclineButton")
     not_right_now_button.click()
+
+    driver.switch_to_default_content()
+    '''
+    driver.implicitly_wait(3)
+    feedback_button = driver.find_element_by_class_name("opt-feedback-link")
+    feedback_button.click()
+
+    WebDriverWait(driver, 90).until(EC.frame_to_be_available_and_switch_to_it((By.XPATH,"//iframe[@id='kampyleForm32024']")))
+    driver.implicitly_wait(5)
+    close2 = driver.find_element_by_xpath("//button[@ng-if='isShowFormCloseButton()']")
+    close2.click()
 
     driver.switch_to_default_content()
 

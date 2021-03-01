@@ -39,12 +39,23 @@ def Main_Product_Page(driver, identifier, final_answer):
 def Main_Product_Page_Close(driver):
     driver.execute_script('''window.open("https://support.hp.com/us-en/products","_blank");''')
     driver.switch_to.window(driver.window_handles[1])
-
+    '''
     WebDriverWait(driver, 90).until(EC.frame_to_be_available_and_switch_to_it((By.XPATH,"//iframe[@id='kampyleInvite']")))
 
     driver.implicitly_wait(90)
     not_right_now_button = driver.find_element_by_id("kplDeclineButton")
     not_right_now_button.click()
+
+    driver.switch_to_default_content()
+    '''
+    driver.implicitly_wait(5)
+    feedback_button = driver.find_element_by_id("opt_custom_Feedback")
+    feedback_button.click()
+
+    WebDriverWait(driver, 90).until(EC.frame_to_be_available_and_switch_to_it((By.XPATH,"//iframe[@id='kampyleForm32024']")))
+    driver.implicitly_wait(5)
+    close = driver.find_element_by_xpath("//button[@ng-if='isShowFormCloseButton()']")
+    close.click()
 
     driver.switch_to_default_content()
 
