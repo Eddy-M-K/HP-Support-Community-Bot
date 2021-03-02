@@ -27,14 +27,23 @@ class Product:
         self.specifications_link = specifications_link
         self.maintenance_link = maintenance_link
 
-    def set_software_link(self, driver):
-        self.software_link = Software_and_Drivers_Link(driver)
+    def set_software_link(self, url):
+        self.software_link = url
 
-    def set_specifications_link(self, driver, identifier):
-        self.specifications_link = Product_Specifications_Link(driver, identifier)
+    def set_specifications_link(self, url):
+        self.specifications_link = url
 
-    def set_maintenance_link(self, driver):
-        self.maintenance_link = Maintenance_and_Service_Guide_Link(driver)
+    def set_maintenance_link(self, url):
+        self.maintenance_link = url
+
+    def find_software_link(self, driver):
+        return Software_and_Drivers_Link(driver)
+
+    def find_specifications_link(self, driver, identifier):
+        return Product_Specifications_Link(driver, identifier)
+
+    def find_maintenance_link(self, driver):
+        return Maintenance_and_Service_Guide_Link(driver)
 
     def get_software_link(self):
         return self.software_link
@@ -75,12 +84,13 @@ Sign_In_Notifications(driver)
 
 Main_Product_Page_Close(driver)
 
-# Finds unread mentions
+# Identifies notification list
 notification_list = driver.find_element_by_id("notificationList")
 ul = notification_list.find_element_by_xpath(".//ul")
 
 while True:
-    unread_mention_list = ul.find_elements_by_xpath(".//li[@class='lia-notification-feed-item lia-notification-mentions lia-notification-unread lia-component-notificationfeed-widget-notification-feed-item']") #lia-notification-feed-item lia-notification-mentions lia-component-notificationfeed-widget-notification-feed-item
+    # Finds unread mentions
+    unread_mention_list = ul.find_elements_by_xpath(".//li[@class='lia-notification-feed-item lia-notification-mentions lia-component-notificationfeed-widget-notification-feed-item']") #lia-notification-feed-item lia-notification-mentions lia-notification-unread lia-component-notificationfeed-widget-notification-feed-item
 
     if (len(unread_mention_list) == 0):
         pass
@@ -131,7 +141,7 @@ while True:
                         print(software_link)
                         print(specifications_link)
                         print(maintenance_link)
-                        #
+
                         Device[identifier] = Product(driver, full_product_name, final_answer, software_link, specifications_link, maintenance_link)
 
                         # SQL COMMAND SWITCHER
@@ -143,42 +153,36 @@ while True:
                                 pass
                             # Specifications
                             elif command_number == 2:
-                                Device[identifier].set_specifications_link(driver, identifier)
                                 if Device[identifier].get_specifications_link == None:
                                     Device[identifier].final_answer += '<p>Product Specifications for the %s were not found.<p>' % Device[identifier].get_full_product_name()
                                 else: 
-                                    Open_URL(driver, Device[identifier].get_specifications_link)
+                                    Open_URL(driver, Device[identifier].get_specifications_link())
                                     if len(split_individual_command) == 2:
-                                        Product_Specifications_Answer(driver, Device[identifier], "all", Device[identifier].get_specifications_link(), Device[identifier].get_full_product_name)
+                                        Product_Specifications_Answer(driver, Device[identifier], "all", Device[identifier].get_specifications_link(), Device[identifier].get_full_product_name())
                                     else:
-                                        Product_Specifications_Answer(driver, Device[identifier], split_individual_command[2:], Device[identifier].get_specifications_link(), Device[identifier].get_full_product_name)
+                                        Product_Specifications_Answer(driver, Device[identifier], split_individual_command[2:], Device[identifier].get_specifications_link(), Device[identifier].get_full_product_name())
                             # Maintenance
                             elif command_number == 3:
-                                Device[identifier].set_maintenance_link(driver)
                                 if Device[identifier].get_maintenance_link == None:
                                     Device[identifier].final_answer += '<p>The Maintenance and Service Guide for the %s was not found.<p>' % Device[identifier].get_full_product_name()
                                 else: 
-                                    Open_URL(driver, Device[identifier].get_maintenance_link)
                                     if command_number == 3:
                                         if len(split_individual_command) == 2:
-                                            Maintenance_and_Service_Guide_Answer(driver, Device[identifier], "No Page", Device[identifier].get_maintenance_link(), Device[identifier].get_full_product_name)
+                                            Maintenance_and_Service_Guide_Answer(driver, Device[identifier], "No Page", Device[identifier].get_maintenance_link(), Device[identifier].get_full_product_name())
                                         else:
-                                            Maintenance_and_Service_Guide_Answer(driver, Device[identifier], split_individual_command[2], Device[identifier].get_maintenance_link(), Device[identifier].get_full_product_name)
+                                            Maintenance_and_Service_Guide_Answer(driver, Device[identifier], split_individual_command[2], Device[identifier].get_maintenance_link(), Device[identifier].get_full_product_name())
                             # Software
                             elif command_number == 4:
-                                Device[identifier].set_software_link(driver)
                                 if Device[identifier].get_maintenance_link == None:
                                     Device[identifier].final_answer += '<p>The Software and Drivers page for the %s was not found.<p>' % Device[identifier].get_full_product_name()
                                 else: 
-                                    Open_URL(driver, Device[identifier].get_software_link)
-                                    Software_and_Drivers_Answer(driver, Device[identifier], split_individual_command[2:], Device[identifier].get_software_link(), Device[identifier].get_full_product_name)
+                                    Open_URL(driver, Device[identifier].get_software_link())
+                                    Software_and_Drivers_Answer(driver, Device[identifier], split_individual_command[2:], Device[identifier].get_software_link(), Device[identifier].get_full_product_name())
                             elif command_number == 5:
                                 # Support
                                 pass
                             else:
                                 Device[identifier].final_answer += "<p>The command '<i>%s</i>' was not recognized.</p>" % (split_individual_command[1])
-
-                        driver.get("https://support.hp.com/us-en/products")
                     else:
                         # Creates new product instance and assigns it to the dictionary device, which is accessible through the identifier
                         Device[identifier] = Product(driver, full_product_name, final_answer, "", "", "")
@@ -220,31 +224,41 @@ while True:
                                 Device[identifier].final_answer += "<p>The command '<i>%s</i>' was not recognized.</p>" % (split_individual_command[1])
 
                         # Opens the Specifications page, saves it, and leaves the tab open
-                        Device[identifier].set_specifications_link(driver, identifier)
+                        Device[identifier].set_specifications_link(Device[identifier].find_specifications_link(driver, identifier))
                         if specifications_request_is_found:
-                            Product_Specifications_Answer(driver, Device[identifier], specs_arguments, Device[identifier].get_specifications_link(), Device[identifier].get_full_product_name())
+                            if Device[identifier].get_specifications_link == None:
+                                    Device[identifier].final_answer += '<p>Product Specifications for the %s were not found.<p>' % Device[identifier].get_full_product_name()
+                            else:
+                                Product_Specifications_Answer(driver, Device[identifier], specs_arguments, Device[identifier].get_specifications_link(), Device[identifier].get_full_product_name())
                         # Closes New Tab
                         Close_Current_Tab(driver)
 
                         # Opens the Maintenance and Service Guide page, saves it, and leaves the tab open
-                        Device[identifier].set_maintenance_link(driver)
+                        Device[identifier].set_maintenance_link(Device[identifier].find_maintenance_link(driver))
                         if maintenance_request_is_found:
-                            Maintenance_and_Service_Guide_Answer(driver, Device[identifier], maintenance_argument, Device[identifier].get_maintenance_link(), Device[identifier].get_full_product_name())
+                            if Device[identifier].get_maintenance_link == None:
+                                Device[identifier].final_answer += '<p>The Maintenance and Service Guide for the %s was not found.<p>' % Device[identifier].get_full_product_name()
+                            else:
+                                Maintenance_and_Service_Guide_Answer(driver, Device[identifier], maintenance_argument, Device[identifier].get_maintenance_link(), Device[identifier].get_full_product_name())
                         # Closes New Tab
                         Close_Current_Tab(driver)
 
                         # Opens the Software and Drivers page in the same tab, saves it, and reverts it back to the default main product page
-                        Device[identifier].set_software_link(driver)
+                        Device[identifier].set_software_link(Device[identifier].find_software_link(driver))
                         if software_request_is_found:
-                            Software_and_Drivers_Answer(driver, Device[identifier], software_arguments, Device[identifier].get_software_link(), Device[identifier].get_full_product_name())
+                            if Device[identifier].get_maintenance_link == None:
+                                Device[identifier].final_answer += '<p>The Software and Drivers page for the %s was not found.<p>' % Device[identifier].get_full_product_name()
+                            else: 
+                                Software_and_Drivers_Answer(driver, Device[identifier], software_arguments, Device[identifier].get_software_link(), Device[identifier].get_full_product_name())
                         
                         driver.get("https://support.hp.com/us-en/products")
 
-                        #SQL_Store_Links(mycursor, db, Device[identifier].get_full_product_name(), Device[identifier].get_software_link(), Device[identifier].get_specifications_link(), Device[identifier].get_maintenance_link())
+                        SQL_Store_Links(mycursor, db, Device[identifier].get_full_product_name(), Device[identifier].get_software_link(), Device[identifier].get_specifications_link(), Device[identifier].get_maintenance_link())
                 driver.close()
                 driver.switch_to.window(driver.window_handles[1])
                 Input_Submit(driver, Device[identifier])
-                #driver.close()
-                #driver.switch_to.window(driver.window_handles[0])
 
-    #driver.refresh()
+                driver.close()
+                driver.switch_to.window(driver.window_handles[0])
+
+    driver.refresh()

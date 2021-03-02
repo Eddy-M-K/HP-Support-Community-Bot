@@ -30,16 +30,16 @@ def SQL_Store_Links(mycursor, db, full_product_name, software_link, specificatio
     mycursor.execute("CREATE TABLE ProductLinks (full_product_name VARCHAR(100) PRIMARY KEY, software_link VARCHAR(255), specifications_link VARCHAR(255), maintenance_link VARCHAR(255))")
 
     mycursor.execute("DESCRIBE ProductLinks")
-
+    
     mycursor.execute("SELECT * FROM ProductLinks")
 
     for x in mycursor:
         print(x)
-    
     '''
+
     sql = "INSERT INTO ProductLinks (full_product_name, software_link, specifications_link, maintenance_link) VALUES (%s, %s, %s, %s)"
     val = (full_product_name, software_link, specifications_link, maintenance_link)
     mycursor.execute(sql, val)
     db.commit()
- 
+
     return

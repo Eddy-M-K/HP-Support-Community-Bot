@@ -42,9 +42,11 @@ def Product_Specifications_Answer(driver, device, keywords, url, full_product_na
     table = content[0].find_element_by_xpath(".//div/div/table/tbody")
 
     if keywords == "all":
-        full_table = driver.find_element_by_class_name("table table-bordered table-steps")
-        tableHTML = full_table.get_attribute('outerHTML')
+        full_table = content[0].find_element_by_xpath(".//div/div/table")
+        tableHTML = full_table.get_attribute('innerHTML')
         device.final_answer += tableHTML
+        device.final_answer += "</table>"
+        device.final_answer += '<p>&nbsp;</p><p class="lia-align-center"><span><a href="%s" target="_blank" rel="noopener">Specifications Source</a></span></p>' % url
         return 
     else:
         for keyword in keywords: 
@@ -55,5 +57,4 @@ def Product_Specifications_Answer(driver, device, keywords, url, full_product_na
 
         device.final_answer += "</table></tbody>"
         device.final_answer += '<p>&nbsp;</p><p class="lia-align-center"><span><a href="%s" target="_blank" rel="noopener">Specifications Source</a></span></p>' % url
-
         return

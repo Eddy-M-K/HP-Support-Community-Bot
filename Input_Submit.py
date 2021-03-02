@@ -47,5 +47,9 @@ def Input_Submit(driver, device):
     except NoSuchElementException:
         pass
 
-    #post_button = driver.find_element_by_id("submitContext_0")
-    #post_button.click()
+    post_button = driver.find_element_by_id("submitContext_0")
+    post_button.click()
+
+    time.sleep(2)
+
+    return
