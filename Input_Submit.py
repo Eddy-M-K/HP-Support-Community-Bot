@@ -26,7 +26,8 @@ def Input_Submit(driver, device):
     ok_button = driver.find_element_by_id("mceu_63-button")
     ok_button.click()
 
-    time.sleep(3)
+    time.sleep(6)
+
     preview_button = driver.find_element_by_id("previewButton")
     driver.execute_script("arguments[0].scrollIntoView();", preview_button)
     driver.execute_script("arguments[0].click();", preview_button)
@@ -47,9 +48,11 @@ def Input_Submit(driver, device):
     except NoSuchElementException:
         pass
 
+    driver.implicitly_wait(5)
     post_button = driver.find_element_by_id("submitContext_0")
-    post_button.click()
+    driver.execute_script("arguments[0].scrollIntoView();", post_button)
+    driver.execute_script("arguments[0].click();", post_button)
 
-    time.sleep(2)
+    time.sleep(4)
 
     return

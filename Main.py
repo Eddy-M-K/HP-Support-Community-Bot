@@ -5,6 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time 
+import mysql.connector
 from selenium.common.exceptions import NoSuchElementException
 from Sign_In_Notifications import *
 from mySQL_ProductLinks import *
@@ -58,6 +59,9 @@ class Product:
         return self.full_product_name
 
 # SQL Sign In and cursor object creation
+# --------------------------------------
+# Local host
+
 s = open("mysql_signin.txt", "r")
 user = s.readline()
 password = s.readline()
@@ -71,8 +75,28 @@ db = mysql.connector.connect(
 
 mycursor = db.cursor()
 
+'''
+
+# Azure Database
+s = open("azure_mysql_signin.txt", "r")
+server = s.readline()
+user = s.readline()
+password = s.readline()
+
+db = mysql.connector.connect(
+    host = "localhost" % server,
+    user = "%s" % user,
+    password = "%s" % password,
+    database = "HP"
+)
+
+mycursor = db.cursor()
+'''
+# --------------------------------------
+
 # Web driver 
-driver = webdriver.Edge(r"C:\Users\EddyM\Downloads\edgedriver_win64 (1)\msedgedriver.exe")
+# driver = webdriver.Edge(r"C:\Users\EddyM\Downloads\edgedriver_win64 (1)\msedgedriver.exe")
+driver = webdriver.Chrome(r"C:\Users\EddyM\Downloads\chromedriver_win32\chromedriver.exe")
 driver.get('https://h30434.www3.hp.com/t5/notificationfeed/page')
 driver.maximize_window()
 
@@ -84,13 +108,14 @@ Sign_In_Notifications(driver)
 
 Main_Product_Page_Close(driver)
 
-# Identifies notification list
-notification_list = driver.find_element_by_id("notificationList")
-ul = notification_list.find_element_by_xpath(".//ul")
-
 while True:
+    # Identifies notification list
+    notification_list = driver.find_element_by_id("notificationList")
+    ul = notification_list.find_element_by_xpath(".//ul")
+
     # Finds unread mentions
-    unread_mention_list = ul.find_elements_by_xpath(".//li[@class='lia-notification-feed-item lia-notification-mentions lia-component-notificationfeed-widget-notification-feed-item']") #lia-notification-feed-item lia-notification-mentions lia-notification-unread lia-component-notificationfeed-widget-notification-feed-item
+    driver.implicitly_wait(5)
+    unread_mention_list = ul.find_elements_by_xpath(".//li[@class='lia-notification-feed-item lia-notification-mentions lia-notification-unread lia-component-notificationfeed-widget-notification-feed-item']") #lia-notification-feed-item lia-notification-mentions lia-component-notificationfeed-widget-notification-feed-item
 
     if (len(unread_mention_list) == 0):
         pass
@@ -138,9 +163,6 @@ while True:
                     if Check_If_Exist(mycursor, full_product_name):
                         # Retrieves all links from the SQL database
                         software_link, specifications_link, maintenance_link = SQL_Get_Links(mycursor, full_product_name)
-                        print(software_link)
-                        print(specifications_link)
-                        print(maintenance_link)
 
                         Device[identifier] = Product(driver, full_product_name, final_answer, software_link, specifications_link, maintenance_link)
 
@@ -250,10 +272,9 @@ while True:
                                 Device[identifier].final_answer += '<p>The Software and Drivers page for the %s was not found.<p>' % Device[identifier].get_full_product_name()
                             else: 
                                 Software_and_Drivers_Answer(driver, Device[identifier], software_arguments, Device[identifier].get_software_link(), Device[identifier].get_full_product_name())
-                        
-                        driver.get("https://support.hp.com/us-en/products")
 
                         SQL_Store_Links(mycursor, db, Device[identifier].get_full_product_name(), Device[identifier].get_software_link(), Device[identifier].get_specifications_link(), Device[identifier].get_maintenance_link())
+
                 driver.close()
                 driver.switch_to.window(driver.window_handles[1])
                 Input_Submit(driver, Device[identifier])
