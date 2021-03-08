@@ -2,6 +2,6 @@
 
 Python bot which uses the Selenium library and the WebDriver API to operate on the HP Support Community and automatically handle certain requests, effectively improving productivity on the user forum.
 
-Logs into a Microsoft Azure MySQL database to cache requests and retrieve information in case the request is made again. 
+Logs into a Microsoft Azure MySQL database to cache requests and retrieve information in case the request is made again. Can be run on the Amazon EC2 instance.
 
 Full Documentation on the exact commands will be posted later.
