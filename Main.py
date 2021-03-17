@@ -76,7 +76,6 @@ db = mysql.connector.connect(
 mycursor = db.cursor()
 
 '''
-
 # Azure Database
 s = open("azure_mysql_signin.txt", "r")
 server = s.readline()
@@ -84,7 +83,7 @@ user = s.readline()
 password = s.readline()
 
 db = mysql.connector.connect(
-    host = "localhost" % server,
+    host = "%s" % server,
     user = "%s" % user,
     password = "%s" % password,
     database = "HP"
@@ -92,9 +91,9 @@ db = mysql.connector.connect(
 
 mycursor = db.cursor()
 '''
-# --------------------------------------
 
 # Web driver 
+# --------------------------------------
 # driver = webdriver.Edge(r"C:\Users\EddyM\Downloads\edgedriver_win64 (1)\msedgedriver.exe")
 driver = webdriver.Chrome(r"C:\Users\EddyM\Downloads\chromedriver_win32\chromedriver.exe")
 driver.get('https://h30434.www3.hp.com/t5/notificationfeed/page')

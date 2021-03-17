@@ -6,7 +6,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 import time 
 from selenium.common.exceptions import NoSuchElementException
 
-
 def Identify_Post_and_Country(driver):
     original_post = driver.find_element_by_class_name("first-message")
     driver.execute_script("arguments[0].scrollIntoView();", original_post)
