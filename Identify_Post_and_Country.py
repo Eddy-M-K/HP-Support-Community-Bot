@@ -6,6 +6,9 @@ from selenium.webdriver.support.ui import WebDriverWait
 import time 
 from selenium.common.exceptions import NoSuchElementException
 
+# Identifies the correct post within the thread to reply to
+# With HP Expert mode enabled, also finds the country of the original poster
+
 def Identify_Post_and_Country(driver):
     original_post = driver.find_element_by_class_name("first-message")
     driver.execute_script("arguments[0].scrollIntoView();", original_post)
@@ -14,6 +17,7 @@ def Identify_Post_and_Country(driver):
         country_element = original_post.find_element_by_class_name("user-location-wrap")
         country = country_element.text
     except NoSuchElementException:
+        # If the country tag is not found, defaults to Worldwide
         country = "Worldwide"
 
     post_url = driver.current_url
@@ -22,6 +26,7 @@ def Identify_Post_and_Country(driver):
     for url in split_url:
         if '#' in url:
             string_hash = url.split("#")
+            # Finds the post number from the URL
             post_number = string_hash[0]
             break
         

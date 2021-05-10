@@ -6,6 +6,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 import time 
 from selenium.common.exceptions import NoSuchElementException
 
+# Function which returns the URL of the Product Specifications
+
 def Product_Specifications_Link(driver, identifier):
     time.sleep(2)
     product_information = driver.find_element_by_id('tab-product-info')
@@ -33,6 +35,7 @@ def Product_Specifications_Link(driver, identifier):
     except NoSuchElementException:
         return None
 
+# Function which adds the information pertaining to the Product Specifications to the final answer
 
 def Product_Specifications_Answer(driver, device, keywords, url, full_product_name):
     device.final_answer += '<hr /><p><font size="5"><strong>Product Specifications</strong></font></p>'

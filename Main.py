@@ -19,7 +19,7 @@ from Main_Product_Page import *
 from Open_Close import *
 from Input_Submit import *
 
-# Product Class Declaration + Definition
+# Product Class Definition
 class Product:
     def __init__(self, driver, full_product_name, final_answer, software_link, specifications_link, maintenance_link):
         self.full_product_name = full_product_name
@@ -27,6 +27,8 @@ class Product:
         self.software_link = software_link
         self.specifications_link = specifications_link
         self.maintenance_link = maintenance_link
+
+    # --- Default setters ---
 
     def set_software_link(self, url):
         self.software_link = url
@@ -37,6 +39,10 @@ class Product:
     def set_maintenance_link(self, url):
         self.maintenance_link = url
 
+    # --- Default setters End ---
+
+    # --- Methods to retrieve URLs ---
+
     def find_software_link(self, driver):
         return Software_and_Drivers_Link(driver)
 
@@ -45,6 +51,10 @@ class Product:
 
     def find_maintenance_link(self, driver):
         return Maintenance_and_Service_Guide_Link(driver)
+
+    # --- URL Retrieval Methods End ---
+
+    # --- Default getters ---
 
     def get_software_link(self):
         return self.software_link
@@ -58,9 +68,9 @@ class Product:
     def get_full_product_name(self):
         return self.full_product_name
 
-# SQL Sign In and cursor object creation
-# --------------------------------------
-# Local host
+    # --- Default getters End ---
+
+# --- SQL Sign In and cursor object creation for a SQL database located on the local host ---
 
 s = open("mysql_signin.txt", "r")
 user = s.readline()
@@ -72,11 +82,12 @@ db = mysql.connector.connect(
     password = "%s" % password,
     database = "HP"
 )
-
 mycursor = db.cursor()
 
+# --- Local Host SQL DB End ---
+
+# --- SQL Sign In and cursor object creation for a SQL database located on Microsoft Azure ---
 '''
-# Azure Database
 s = open("azure_mysql_signin.txt", "r")
 server = s.readline()
 user = s.readline()
@@ -91,20 +102,24 @@ db = mysql.connector.connect(
 
 mycursor = db.cursor()
 '''
+# --- MS Azure SQL DB End ---
 
-# Web driver 
-# --------------------------------------
+# --- Driver Creation ---
+
 # driver = webdriver.Edge(r"C:\Users\EddyM\Downloads\edgedriver_win64 (1)\msedgedriver.exe")
 driver = webdriver.Chrome(r"C:\Users\EddyM\Downloads\chromedriver_win32\chromedriver.exe")
 driver.get('https://h30434.www3.hp.com/t5/notificationfeed/page')
 driver.maximize_window()
 
-# Declares the Product dictionary, which will act as a list of Product instances
+# --- Driver Creation End ---
+
+# Declares the Product dictionary, which will act as a list of instances of the "Product" class
 Device = {}
 
 # Signs into the support community
 Sign_In_Notifications(driver)
 
+# Opens HP Support's Main Support Page to close intrusive popups once
 Main_Product_Page_Close(driver)
 
 while True:
@@ -125,12 +140,12 @@ while True:
             driver.execute_script("arguments[0].scrollIntoView();", user_element)
             user_text = user_element.text
 
-            # Checks if the user is EddyK
+            # Checks if the user mentioning the bot is EddyK
             if user_text == 'EddyK': 
                 # Initializes the final answer
                 final_answer = ""
 
-                # Opens forum thread with unread mention in new tab
+                # Opens forum thread with the unread mention in a new tab
                 forum_thread_link = mention.find_element_by_xpath(".//div/div/div[2]/div/a")
                 forum_thread_link.send_keys(Keys.CONTROL + Keys.ENTER)
                 driver.switch_to.window(driver.window_handles[1])
@@ -155,7 +170,7 @@ while True:
                             identifier = " ".join(k[2:])
                             break
 
-                    # Opens the main product page in browser handle 2 and returns the full product name 
+                    # Opens the Main Product Page in browser handle 2 and returns the full product name 
                     full_product_name, final_answer = Main_Product_Page(driver, identifier, final_answer)
 
                     # Checks if the full product name exists in the MySQL database
@@ -165,7 +180,7 @@ while True:
 
                         Device[identifier] = Product(driver, full_product_name, final_answer, software_link, specifications_link, maintenance_link)
 
-                        # SQL COMMAND SWITCHER
+                        # SQL Database Command Switcher 
                         for individual_command in individual_commands:
                             split_individual_command = individual_command.split(" ")
                             command_number = Command_Type(split_individual_command[1])
@@ -212,7 +227,7 @@ while True:
                         maintenance_request_is_found = False
                         software_request_is_found = False
 
-                        # SELENIUM COMMAND SWITCHER
+                        # Selenium Command Switcher
                         for individual_command in individual_commands:
                             split_individual_command = individual_command.split(" ")
                             command_number = Command_Type(split_individual_command[1])
@@ -276,9 +291,12 @@ while True:
 
                 driver.close()
                 driver.switch_to.window(driver.window_handles[1])
+                # Submit the answer
                 Input_Submit(driver, Device[identifier])
 
                 driver.close()
+                # Reset to first browser handle
                 driver.switch_to.window(driver.window_handles[0])
 
+    # Refresh the notifications page to check for new notifications
     driver.refresh()

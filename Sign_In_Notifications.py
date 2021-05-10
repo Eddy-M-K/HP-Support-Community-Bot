@@ -7,6 +7,8 @@ import time
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support import expected_conditions as EC
 
+# Signs in to the HP Support Community
+
 def Sign_In_Notifications(driver):
     t = open("signin.txt", "r")
     id_username = t.readline()
@@ -23,7 +25,7 @@ def Sign_In_Notifications(driver):
     password = driver.find_element_by_id("password")
     password.send_keys(id_password)
 
-    submit_button = driver.find_element_by_css_selector("button[type='submit']")#driver.find_element_by_class_name("vn-button vn-button--critical vn-button--expanded")
+    submit_button = driver.find_element_by_css_selector("button[type='submit']")
     submit_button.click()
 
     driver.implicitly_wait(10)

@@ -6,6 +6,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 import time 
 from selenium.common.exceptions import NoSuchElementException
 
+# Function which returns the URL of the Software and Drivers Page
+
 def Software_and_Drivers_Link(driver):
     try:
         software_button = driver.find_element_by_id("drivers")
@@ -13,6 +15,8 @@ def Software_and_Drivers_Link(driver):
         return driver.current_url
     except NoSuchElementException:
         return None
+
+# Function which adds the information pertaining to the Software and Drivers to the final answer
 
 def Software_and_Drivers_Answer(driver, device, softpaq_names, url, full_product_name):
     device.final_answer += '<hr /><p><font size="5"><strong>Software and Drivers</strong></font></p>'

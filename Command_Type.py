@@ -1,3 +1,5 @@
+# A dictionary acting as an alternative to a "switch" statement to equate certain words to its correct command type
+
 def Command_Type(command):
     switcher = {
         "product:": 1,

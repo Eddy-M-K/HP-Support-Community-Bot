@@ -6,6 +6,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 import time 
 from selenium.common.exceptions import NoSuchElementException
 
+# Function which returns the URL of the Maintenance and Service Guide
+
 def Maintenance_and_Service_Guide_Link(driver):
     manuals = driver.find_element_by_id('manuals')
     manuals.click()
@@ -20,6 +22,8 @@ def Maintenance_and_Service_Guide_Link(driver):
         return maintenance_and_service_guide_page
     except NoSuchElementException:
         return None
+
+# Function which adds the information pertaining to the Maintenance and Service Guide to the final answer
 
 def Maintenance_and_Service_Guide_Answer(driver, device, page, url, full_product_name):
     device.final_answer += '<hr /><p><font size="5"><strong>Maintenance and Service Guide</strong></font></p>'

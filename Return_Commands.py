@@ -1,3 +1,7 @@
+from selenium import webdriver
+
+# Returns the commands from the post
+
 def Return_Commands(driver):
     driver.implicitly_wait(10)
     post_box = driver.find_element_by_id("bodyDisplay")
