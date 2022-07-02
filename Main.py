@@ -4,7 +4,7 @@ from msedge.selenium_tools import Edge, EdgeOptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import time 
+import time
 import mysql.connector
 from selenium.common.exceptions import NoSuchElementException
 from Sign_In_Notifications import *
@@ -19,7 +19,9 @@ from Main_Product_Page import *
 from Open_Close import *
 from Input_Submit import *
 
-# Product Class Definition
+
+# --- Product Class Definition ---
+
 class Product:
     def __init__(self, driver, full_product_name, final_answer, software_link, specifications_link, maintenance_link):
         self.full_product_name = full_product_name
@@ -28,7 +30,8 @@ class Product:
         self.specifications_link = specifications_link
         self.maintenance_link = maintenance_link
 
-    # --- Default setters ---
+
+    # --- Setters ---
 
     def set_software_link(self, url):
         self.software_link = url
@@ -39,7 +42,6 @@ class Product:
     def set_maintenance_link(self, url):
         self.maintenance_link = url
 
-    # --- Default setters End ---
 
     # --- Methods to retrieve URLs ---
 
@@ -52,9 +54,8 @@ class Product:
     def find_maintenance_link(self, driver):
         return Maintenance_and_Service_Guide_Link(driver)
 
-    # --- URL Retrieval Methods End ---
 
-    # --- Default getters ---
+    # --- Getters ---
 
     def get_software_link(self):
         return self.software_link
@@ -68,50 +69,52 @@ class Product:
     def get_full_product_name(self):
         return self.full_product_name
 
-    # --- Default getters End ---
 
-# --- SQL Sign In and cursor object creation for a SQL database located on the local host ---
+# --- MySQL Sign In and cursor object creation for a MySQL database located on the local host ---
 
-s = open("mysql_signin.txt", "r")
+mysql_credentials_path = ""
+s = open(mysql_credentials_path, "r")
 user = s.readline()
 password = s.readline()
 
+database_name = ""
 db = mysql.connector.connect(
     host = "localhost",
     user = "%s" % user,
     password = "%s" % password,
-    database = "HP"
+    database = "%s" % database_name
 )
 mycursor = db.cursor()
 
-# --- Local Host SQL DB End ---
 
-# --- SQL Sign In and cursor object creation for a SQL database located on Microsoft Azure ---
+# --- MySQL Sign In and cursor object creation for a MySQL database located on Microsoft Azure ---
 '''
-s = open("azure_mysql_signin.txt", "r")
+azure_mysql_creds_path = ""
+s = open(azure_mysql_creds_path, "r")
 server = s.readline()
 user = s.readline()
 password = s.readline()
 
+database_name = ""
 db = mysql.connector.connect(
     host = "%s" % server,
     user = "%s" % user,
     password = "%s" % password,
-    database = "HP"
+    database = "%s" % database_name
 )
 
 mycursor = db.cursor()
 '''
-# --- MS Azure SQL DB End ---
+
 
 # --- Driver Creation ---
 
-# driver = webdriver.Edge(r"C:\Users\EddyM\Downloads\edgedriver_win64 (1)\msedgedriver.exe")
-driver = webdriver.Chrome(r"C:\Users\EddyM\Downloads\chromedriver_win32\chromedriver.exe")
+webdriver_path = ""
+# driver = webdriver.Edge(webdriver_path)
+driver = webdriver.Chrome(webdriver_path)
 driver.get('https://h30434.www3.hp.com/t5/notificationfeed/page')
 driver.maximize_window()
 
-# --- Driver Creation End ---
 
 # Declares the Product dictionary, which will act as a list of instances of the "Product" class
 Device = {}
@@ -141,7 +144,7 @@ while True:
             user_text = user_element.text
 
             # Checks if the user mentioning the bot is EddyK
-            if user_text == 'EddyK': 
+            if user_text == 'EddyK':
                 # Initializes the final answer
                 final_answer = ""
 
@@ -170,7 +173,7 @@ while True:
                             identifier = " ".join(k[2:])
                             break
 
-                    # Opens the Main Product Page in browser handle 2 and returns the full product name 
+                    # Opens the Main Product Page in browser handle 2 and returns the full product name
                     full_product_name, final_answer = Main_Product_Page(driver, identifier, final_answer)
 
                     # Checks if the full product name exists in the MySQL database
@@ -180,7 +183,7 @@ while True:
 
                         Device[identifier] = Product(driver, full_product_name, final_answer, software_link, specifications_link, maintenance_link)
 
-                        # SQL Database Command Switcher 
+                        # SQL Database Command Switcher
                         for individual_command in individual_commands:
                             split_individual_command = individual_command.split(" ")
                             command_number = Command_Type(split_individual_command[1])
@@ -191,7 +194,7 @@ while True:
                             elif command_number == 2:
                                 if Device[identifier].get_specifications_link == None:
                                     Device[identifier].final_answer += '<p>Product Specifications for the %s were not found.<p>' % Device[identifier].get_full_product_name()
-                                else: 
+                                else:
                                     Open_URL(driver, Device[identifier].get_specifications_link())
                                     if len(split_individual_command) == 2:
                                         Product_Specifications_Answer(driver, Device[identifier], "all", Device[identifier].get_specifications_link(), Device[identifier].get_full_product_name())
@@ -201,7 +204,7 @@ while True:
                             elif command_number == 3:
                                 if Device[identifier].get_maintenance_link == None:
                                     Device[identifier].final_answer += '<p>The Maintenance and Service Guide for the %s was not found.<p>' % Device[identifier].get_full_product_name()
-                                else: 
+                                else:
                                     if command_number == 3:
                                         if len(split_individual_command) == 2:
                                             Maintenance_and_Service_Guide_Answer(driver, Device[identifier], "No Page", Device[identifier].get_maintenance_link(), Device[identifier].get_full_product_name())
@@ -211,7 +214,7 @@ while True:
                             elif command_number == 4:
                                 if Device[identifier].get_maintenance_link == None:
                                     Device[identifier].final_answer += '<p>The Software and Drivers page for the %s was not found.<p>' % Device[identifier].get_full_product_name()
-                                else: 
+                                else:
                                     Open_URL(driver, Device[identifier].get_software_link())
                                     Software_and_Drivers_Answer(driver, Device[identifier], split_individual_command[2:], Device[identifier].get_software_link(), Device[identifier].get_full_product_name())
                             elif command_number == 5:
@@ -284,7 +287,7 @@ while True:
                         if software_request_is_found:
                             if Device[identifier].get_maintenance_link == None:
                                 Device[identifier].final_answer += '<p>The Software and Drivers page for the %s was not found.<p>' % Device[identifier].get_full_product_name()
-                            else: 
+                            else:
                                 Software_and_Drivers_Answer(driver, Device[identifier], software_arguments, Device[identifier].get_software_link(), Device[identifier].get_full_product_name())
 
                         SQL_Store_Links(mycursor, db, Device[identifier].get_full_product_name(), Device[identifier].get_software_link(), Device[identifier].get_specifications_link(), Device[identifier].get_maintenance_link())
