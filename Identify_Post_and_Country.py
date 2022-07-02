@@ -3,8 +3,9 @@ from selenium.webdriver.common.keys import Keys
 from msedge.selenium_tools import Edge, EdgeOptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-import time 
+import time
 from selenium.common.exceptions import NoSuchElementException
+
 
 # Identifies the correct post within the thread to reply to
 # With HP Expert mode enabled, also finds the country of the original poster
@@ -29,7 +30,7 @@ def Identify_Post_and_Country(driver):
             # Finds the post number from the URL
             post_number = string_hash[0]
             break
-        
+
     post = driver.find_element_by_xpath("//div[@data-lia-message-uid='%s']" % post_number)
     driver.execute_script("arguments[0].scrollIntoView();", post)
     reply_button = post.find_element_by_xpath(".//a[@class='lia-button lia-button-secondary reply-action-link lia-action-reply']")

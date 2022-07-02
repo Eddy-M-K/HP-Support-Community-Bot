@@ -1,5 +1,6 @@
 from selenium import webdriver
 
+
 # Returns the commands from the post
 
 def Return_Commands(driver):

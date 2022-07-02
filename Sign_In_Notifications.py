@@ -3,9 +3,10 @@ from selenium.webdriver.common.keys import Keys
 from msedge.selenium_tools import Edge, EdgeOptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-import time 
+import time
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support import expected_conditions as EC
+
 
 # Signs in to the HP Support Community
 
@@ -57,5 +58,3 @@ def Sign_In_Notifications(driver):
     close2.click()
 
     driver.switch_to_default_content()
-
-    return

@@ -3,7 +3,7 @@ from selenium.webdriver.common.keys import Keys
 from msedge.selenium_tools import Edge, EdgeOptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-import time 
+import time
 from selenium.common.exceptions import NoSuchElementException
 
 # Final function to input the final answer into the text box and submit a post on the thread
@@ -54,5 +54,3 @@ def Input_Submit(driver, device):
     driver.execute_script("arguments[0].click();", post_button)
 
     time.sleep(4)
-
-    return

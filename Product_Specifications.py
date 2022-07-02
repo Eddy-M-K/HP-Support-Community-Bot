@@ -3,8 +3,9 @@ from selenium.webdriver.common.keys import Keys
 from msedge.selenium_tools import Edge, EdgeOptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-import time 
+import time
 from selenium.common.exceptions import NoSuchElementException
+
 
 # Function which returns the URL of the Product Specifications
 
@@ -39,7 +40,7 @@ def Product_Specifications_Link(driver, identifier):
 
 def Product_Specifications_Answer(driver, device, keywords, url, full_product_name):
     device.final_answer += '<hr /><p><font size="5"><strong>Product Specifications</strong></font></p>'
-    
+
     device.final_answer += "<table><tbody>"
     content = driver.find_elements_by_class_name('content')
     table = content[0].find_element_by_xpath(".//div/div/table/tbody")
@@ -50,9 +51,8 @@ def Product_Specifications_Answer(driver, device, keywords, url, full_product_na
         device.final_answer += tableHTML
         device.final_answer += "</table>"
         device.final_answer += '<p>&nbsp;</p><p class="lia-align-center"><span><a href="%s" target="_blank" rel="noopener">Specifications Source</a></span></p>' % url
-        return 
     else:
-        for keyword in keywords: 
+        for keyword in keywords:
             keyword_row = table.find_element_by_xpath(".//*[contains(text(), '%s')]" % keyword)
             row = keyword_row.find_element_by_xpath(".//../../..")
             rowHTML = row.get_attribute('outerHTML')
@@ -60,4 +60,3 @@ def Product_Specifications_Answer(driver, device, keywords, url, full_product_na
 
         device.final_answer += "</table></tbody>"
         device.final_answer += '<p>&nbsp;</p><p class="lia-align-center"><span><a href="%s" target="_blank" rel="noopener">Specifications Source</a></span></p>' % url
-        return

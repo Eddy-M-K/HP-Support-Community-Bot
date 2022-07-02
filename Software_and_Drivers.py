@@ -3,8 +3,9 @@ from selenium.webdriver.common.keys import Keys
 from msedge.selenium_tools import Edge, EdgeOptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-import time 
+import time
 from selenium.common.exceptions import NoSuchElementException
+
 
 # Function which returns the URL of the Software and Drivers Page
 
@@ -15,6 +16,7 @@ def Software_and_Drivers_Link(driver):
         return driver.current_url
     except NoSuchElementException:
         return None
+
 
 # Function which adds the information pertaining to the Software and Drivers to the final answer
 
@@ -46,7 +48,7 @@ def Software_and_Drivers_Answer(driver, device, softpaq_names, url, full_product
         fix = dividers[10].text
         if len(fix) > 0:
             fix_is_found = True
-        else: 
+        else:
             fix_is_found = False
 
         device.final_answer += """
@@ -88,5 +90,3 @@ def Software_and_Drivers_Answer(driver, device, softpaq_names, url, full_product
     device.final_answer += """
     <p class="lia-align-center"><span>By downloading, you agree to HP's terms and conditions.&nbsp;</span><a href="https://support.hp.com/us-en/document/c00581401" target="_blank" rel="noopener">HP Software License Agreement.</a></p>
     """
-
-    return

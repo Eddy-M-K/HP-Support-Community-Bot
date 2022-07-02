@@ -3,9 +3,10 @@ from selenium.webdriver.common.keys import Keys
 from msedge.selenium_tools import Edge, EdgeOptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-import time 
+import time
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support import expected_conditions as EC
+
 
 # Function to open the Main Product Page
 
@@ -33,6 +34,7 @@ def Main_Product_Page(driver, identifier, final_answer):
 
     return full_product_name, final_answer
 
+
 # Function to close intrusive popups that would interefere with the bot (Only runs once at the beginning)
 
 def Main_Product_Page_Close(driver):
@@ -52,6 +54,4 @@ def Main_Product_Page_Close(driver):
 
     driver.close()
 
-    driver.switch_to.window(driver.window_handles[0])   
-
-    return
+    driver.switch_to.window(driver.window_handles[0])

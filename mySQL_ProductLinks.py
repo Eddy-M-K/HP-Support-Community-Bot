@@ -3,15 +3,16 @@ from selenium.webdriver.common.keys import Keys
 from msedge.selenium_tools import Edge, EdgeOptions
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-import time 
+import time
 from selenium.common.exceptions import NoSuchElementException
 import mysql.connector
 
-# Checks the SQL database if the product alreadly exists
+
+# Checks the SQL database to see if the product already exists
 
 def Check_If_Exist(mycursor, full_product_name):
     mycursor.execute("SELECT * FROM ProductLinks WHERE full_product_name = %s GROUP BY full_product_name", (full_product_name,))
-    
+
     results = mycursor.fetchall()
     rowcount = mycursor.rowcount
 
@@ -20,13 +21,15 @@ def Check_If_Exist(mycursor, full_product_name):
     else:
         return False
 
+
 # Fetches the links of the relevant product when it exists in the SQL database
 
 def SQL_Get_Links(mycursor, full_product_name):
     mycursor.execute("SELECT software_link, specifications_link, maintenance_link From ProductLinks WHERE full_product_name = %s", (full_product_name,))
     result = (mycursor.fetchall()[0])
-   
+
     return result[0], result[1], result[2]
+
 
 # Stores the product's links into the SQL database
 
@@ -47,5 +50,3 @@ def SQL_Store_Links(mycursor, db, full_product_name, software_link, specificatio
     val = (full_product_name, software_link, specifications_link, maintenance_link)
     mycursor.execute(sql, val)
     db.commit()
-
-    return
